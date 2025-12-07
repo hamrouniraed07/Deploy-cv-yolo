@@ -15,6 +15,7 @@ services:
       --model-store /home/model-server/model-store
       --models yolo=yolo.mar
       --ts-config /home/model-server/config.properties
+      --disable-token-auth
 
   api-gateway:
     build: ./api-gateway
