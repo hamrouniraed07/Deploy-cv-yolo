@@ -1,0 +1,5 @@
+torch-model-archiver
+ultralytics
+pillow
+numpy
+requests

@@ -1,0 +1,28 @@
+services:
+  torchserve:
+    image: salahgo/torchserve:latest-cpu
+    container_name: torchserve
+    ports:
+      - "8085:8080"   # inference
+      - "8086:8081"   # management
+    volumes:
+      - ./serving/torchserve/model-store:/home/model-server/model-store
+      - ./serving/torchserve/config.properties:/home/model-server/config.properties
+    command: >
+      torchserve
+      --start
+      --ncs
+      --model-store /home/model-server/model-store
+      --models yolo=yolo.mar
+      --ts-config /home/model-server/config.properties
+      --disable-token-auth
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: yolo-gateway
+    depends_on:
+      - torchserve
+    environment:
+      - TORCHSERVE_PREDICT_URL=http://torchserve:8080/predictions/yolo
+    ports:
+      - "8001:8000"
